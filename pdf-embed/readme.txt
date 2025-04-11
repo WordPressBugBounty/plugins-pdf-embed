@@ -1,8 +1,8 @@
 === Pdf Embed ===
 Contributors:      tropicalista
 Tags:              pdf embedder, embed pdf, pdf embed api, pdf block, block
-Tested up to:      6.7
-Stable tag:        0.5.1
+Tested up to:      6.7.2
+Stable tag:        0.5.3
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 5.6.0
@@ -78,6 +78,16 @@ Yes you will need a free [Adobe PDF Embed API](https://developer.adobe.com/docum
 5. Pdf block controls
 
 == Changelog ==
+
+= 0.5.3 =
+* Minor fix
+
+= 0.5.2 =
+* Added text selection option
+* Added PDF linearization
+* Added global options
+* Better handling of API key error
+* Better handling of height
 
 = 0.5.1 =
 * Fix appsero client
