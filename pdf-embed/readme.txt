@@ -2,11 +2,11 @@
 Contributors:      tropicalista
 Tags:              pdf embedder, embed pdf, pdf embed api, pdf block, block
 Tested up to:      6.9
-Stable tag:        0.5.9
+Stable tag:        0.6.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 5.6.0
-Requires PHP:      5.6
+Requires at least: 6.0
+Requires PHP:      7.0
 
 PDF embedder with official Adobe Embed API.
 
@@ -78,6 +78,9 @@ Yes you will need a free [Adobe PDF Embed API](https://developer.adobe.com/docum
 5. Pdf block controls
 
 == Changelog ==
+
+= 0.6.0 =
+* Fix composer autoload
 
 = 0.5.9 =
 * Add settings global page
