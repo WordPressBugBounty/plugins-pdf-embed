@@ -3,7 +3,7 @@
  * Plugin Name: Pdf Embed
  * Plugin URI:  https://www.francescopepe.com/
  * Description: PDF embedded with official Adobe API.
- * Version:     0.6.0
+ * Version:     0.6.1
  * Author:      Tropicalista
  * Author URI:  https://www.francescopepe.com
  * License:     GPL2
@@ -26,36 +26,56 @@ function pdf_embed_block_init() {
 	register_block_type_from_metadata(
 		__DIR__ . '/build'
 	);
+
+	$defaults = array(
+		'apiKey'                   => '',
+		'measurementId'            => '',
+		'embedMode'                => 'FULL_WINDOW',
+		'showZoomControl'          => true,
+		'showAnnotationTools'      => true,
+		'showFullScreen'           => true,
+		'defaultViewMode'          => 'FIT_PAGE',
+		'enableFormFilling'        => false,
+		'showDownloadPDF'          => true,
+		'showPrintPDF'             => true,
+		'exitPDFViewerType'        => 'CLOSE',
+		'showThumbnails'           => true,
+		'showBookmarks'            => true,
+		'enableLinearization'      => false,
+		'enableAnnotationAPIs'     => false,
+		'includePDFAnnotations'    => false,
+		'enableSearchAPIs'         => true,
+		'showDisabledSaveButton'   => true,
+		'focusOnRendering'         => true,
+		'showFullScreenViewButton' => true,
+		'dockPageControls'         => true,
+		'enableTextSelection'      => false,
+	);
+
+	$strings = array( 'apiKey', 'measurementId', 'embedMode', 'defaultViewMode', 'exitPDFViewerType' );
+
+	$properties = array();
+
+	foreach ( $defaults as $key => $value ) {
+		if ( in_array( $key, $strings, true ) ) {
+			$properties[ $key ] = array(
+				'type' => 'string',
+			);
+		} else {
+			$properties[ $key ] = array(
+				'type' => 'boolean',
+			);
+		}
+	}
+
 	$args = array(
-		'type'              => 'object',
-		'default'        => array(
-			'apiKey'                   => '',
-			'measurementId'            => '',
-			'embedMode'                => 'FULL_WINDOW',
-			'showZoomControl'          => true,
-			'showAnnotationTools'      => true,
-			'showFullScreen'           => true,
-			'defaultViewMode'          => 'FIT_PAGE',
-			'enableFormFilling'        => false,
-			'showDownloadPDF'          => true,
-			'showPrintPDF'             => true,
-			'exitPDFViewerType'        => 'CLOSE',
-			'showThumbnails'           => true,
-			'showBookmarks'            => true,
-			'enableLinearization'      => false,
-			'enableAnnotationAPIs'     => false,
-			'includePDFAnnotations'    => false,
-			'enableSearchAPIs'         => true,
-			'showDisabledSaveButton'   => true,
-			'focusOnRendering'         => true,
-			'showFullScreenViewButton' => true,
-			'dockPageControls'         => true,
-			'enableTextSelection'      => false,
-		),
+		'type'         => 'object',
+		'default'      => $defaults,
 		'show_in_rest' => array(
 			'schema' => array(
-				'type'  => 'object',
-				'additionalProperties' => true,
+				'type'                 => 'object',
+				'properties'           => $properties,
+				'additionalProperties' => false,
 			),
 		),
 	);
@@ -211,3 +231,25 @@ function pdf_embed_tracker_optin( $data ) {
 	);
 }
 add_action( 'pdf-embed_tracker_optin', 'pdf_embed_tracker_optin', 10 );
+
+/**
+ * This function runs when WordPress completes its upgrade process
+ * It iterates through each plugin updated to see if ours is included
+ * @param $upgrader_object Array
+ * @param $options Array
+ */
+function pdf_embed_upgrade_completed( $upgrader_object, $options ) {
+	// The path to our plugin's main file
+	$our_plugin = plugin_basename( __FILE__ );
+	// If an update has taken place and the updated type is plugins and the plugins element exists
+	if ( 'update' === $options['action'] && 'plugin' === $options['type'] && isset( $options['plugins'] ) ) {
+		// Iterate through the plugins being updated and check if ours is there
+		foreach ( $options['plugins'] as $plugin ) {
+			if ( $plugin === $our_plugin ) {
+				// Remove old setting.
+				delete_option( 'pdf_embed_api_key' );
+			}
+		}
+	}
+}
+add_action( 'upgrader_process_complete', 'pdf_embed_upgrade_completed', 10, 2 );
